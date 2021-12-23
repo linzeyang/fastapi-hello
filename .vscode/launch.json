@@ -11,9 +11,26 @@
             "module": "uvicorn",
             "args": [
                 "main:app",
+                "--port",
+                "8000",
                 "--reload"
             ],
             "jinja": false
+        },
+        {
+            "name": "Docker: Python - Fastapi w/ uvicorn",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    }
+                ],
+                "projectType": "fastapi"
+            }
         }
     ]
 }

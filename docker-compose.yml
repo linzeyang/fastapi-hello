@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  fastapi_hello:
+    image: fastapi_hello
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
