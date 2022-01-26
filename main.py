@@ -1,8 +1,8 @@
 from decimal import Decimal
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
 
 
@@ -27,6 +27,35 @@ def home() -> dict:
     return {"message": "hello, world!"}
 
 
+@app.get("/items")
+def read_items(
+    q: Optional[str] = Query(
+        None,
+        min_length=3,
+        max_length=50,
+        regex=r"^\w+$",
+        title="Query string",
+        description="Query string for the items to search",
+    ),
+    q2: List[str] = Query(["aa", "bb", "cc"], alias="q-2"),
+    q3: Optional[str] = Query(None, deprecated=True),
+) -> dict:
+    results = {
+        "items": [
+            {"item_id": "Foo"},
+            {"item_id": "Bar"},
+        ],
+    }
+
+    if q:
+        results["q"] = q
+
+    results["q2"] = q2
+
+    return results
+
+
+@app.get("/items/{item_id}")
 @app.get("/item/{item_id}")
 def read_item(
     item_id: int, needy: str, q: Optional[str] = None, short: bool = False
