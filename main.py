@@ -1,12 +1,30 @@
 from decimal import Decimal
 from enum import Enum
+from http import HTTPStatus
 from typing import List, Optional
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Header, HTTPException, Query
 from pydantic import BaseModel
+
+FAKE_SECRET_TOKEN = "coneofsilence"
+fake_db = {
+    1: {
+        "id": "1",
+        "name": "Foo",
+        "description": "There goes my hero",
+        "price": Decimal("1.00"),
+    },
+    2: {
+        "id": "2",
+        "name": "Bar",
+        "description": "The bartenders",
+        "price": Decimal("1.00"),
+    },
+}
 
 
 class Item(BaseModel):
+    id: Optional[int] = None
     name: str
     description: Optional[str] = None
     price: Decimal
@@ -58,7 +76,11 @@ def read_items(
 @app.get("/items/{item_id}")
 @app.get("/item/{item_id}")
 def read_item(
-    item_id: int, needy: str, q: Optional[str] = None, short: bool = False
+    item_id: int,
+    needy: str,
+    q: Optional[str] = None,
+    short: bool = False,
+    x_token: str = Header(...),
 ) -> dict:
     """
     :8000/item/321?needy=whoo&short=1
@@ -66,8 +88,16 @@ def read_item(
     :8000/item/321?needy=whoo&short=on
     :8000/item/321?needy=whoo&short=yes
     """
+    if x_token != FAKE_SECRET_TOKEN:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST, detail="Invalid X-Token header"
+        )
+
+    if item_id not in fake_db:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Item not found")
+
     return {
-        "item_id": item_id,
+        "item": fake_db[item_id],
         "needy": needy,
         "q": q,
         "description": "awesome long description" if not short else "desc",
@@ -75,7 +105,17 @@ def read_item(
 
 
 @app.post("/item")
-def create_item(item: Item) -> dict:
+def create_item(item: Item, x_token: str = Header(...)) -> dict:
+    if x_token != FAKE_SECRET_TOKEN:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST, detail="Invalid X-Token header"
+        )
+
+    if item.id in fake_db:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST, detail="Item already exists"
+        )
+
     item_dict = item.dict()
 
     if item.tax:
