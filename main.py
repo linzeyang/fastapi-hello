@@ -1,10 +1,10 @@
 from decimal import Decimal
 from enum import Enum
 from http import HTTPStatus
-from typing import List, Optional
+from typing import Dict, List, Optional
 
-from fastapi import FastAPI, Header, HTTPException, Query
-from pydantic import BaseModel
+from fastapi import Body, FastAPI, Header, HTTPException, Path, Query
+from pydantic import BaseModel, Field, HttpUrl
 
 FAKE_SECRET_TOKEN = "coneofsilence"
 fake_db = {
@@ -23,12 +23,24 @@ fake_db = {
 }
 
 
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
+
+
 class Item(BaseModel):
     id: Optional[int] = None
     name: str
-    description: Optional[str] = None
-    price: Decimal
+    description: Optional[str] = Field(None, max_length=100)
+    price: Decimal = Field(..., ge=Decimal())
     tax: Optional[Decimal] = None
+    tags: List[str] = []
+    images: Optional[List[Image]] = None
+
+
+class User(BaseModel):
+    username: str
+    full_name: Optional[str] = None
 
 
 class ModelName(str, Enum):
@@ -76,10 +88,10 @@ def read_items(
 @app.get("/items/{item_id}")
 @app.get("/item/{item_id}")
 def read_item(
-    item_id: int,
-    needy: str,
-    q: Optional[str] = None,
-    short: bool = False,
+    item_id: int = Path(..., ge=1, title="The ID of the item"),
+    needy: str = Query(...),
+    q: Optional[str] = Query(None),
+    short: bool = Query(False),
     x_token: str = Header(...),
 ) -> dict:
     """
@@ -105,7 +117,9 @@ def read_item(
 
 
 @app.post("/item")
-def create_item(item: Item, x_token: str = Header(...)) -> dict:
+def create_item(
+    item: Item = Body(..., embed=False), x_token: str = Header(...)
+) -> dict:
     if x_token != FAKE_SECRET_TOKEN:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST, detail="Invalid X-Token header"
@@ -125,9 +139,17 @@ def create_item(item: Item, x_token: str = Header(...)) -> dict:
 
 
 @app.put("/item/{item_id}")
-def update_item(item_id: int, item: Item, q: Optional[str] = None) -> dict:
-    item_dict = item.dict()
-    item_dict["id"] = item_id
+def update_item(
+    item_id: int = Path(..., ge=1, title="The ID of the item"),
+    item: Item = Body(...),
+    user: Optional[User] = None,
+    importance: int = Body(1, ge=0, le=9),
+    q: Optional[str] = None,
+) -> dict:
+    item_dict = {"id": item_id, "importance": importance, "item": item.dict()}
+
+    if user:
+        item_dict["user"] = user.dict()
 
     if q:
         item_dict["q"] = q
@@ -144,3 +166,13 @@ def get_model(model_name: ModelName) -> dict:
         return {"model_name": model_name, "message": "LeCNN all the images"}
 
     return {"model_name": model_name, "message": "Have some residuals"}
+
+
+@app.post("/images/multiple/")
+def create_multiple_images(images: List[Image]):
+    return images
+
+
+@app.post("/index-weights/")
+def create_index_weights(weights: Dict[int, Decimal]):
+    return weights

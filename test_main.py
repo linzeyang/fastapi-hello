@@ -33,6 +33,15 @@ def test_read_item():
     }
 
 
+def test_read_item_missing_mandatory_query_param():
+    resp = test_client.get(
+        "/item/1", params={"q": "blahblah"}, headers={"X-Token": "hailhydra"}
+    )
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert resp.json()["detail"]
+
+
 def test_read_item_invalid_token():
     resp = test_client.get(
         "/items/1", params={"needy": "abcde"}, headers={"X-Token": "hailhydra"}
@@ -55,7 +64,13 @@ def test_create_item():
     resp = test_client.post(
         "/item",
         headers={"X-Token": "coneofsilence"},
-        json={"id": 3, "name": "Bazz", "price": 1.590},
+        json={
+            "id": 3,
+            "name": "Bazz",
+            "price": 1.590,
+            "tags": ["i", "j", "k"],
+            "images": [{"url": "http://1.2.3.4/img/1.jpg", "name": "test_img"}],
+        },
     )
 
     assert resp.status_code == HTTPStatus.OK
@@ -65,6 +80,8 @@ def test_create_item():
         "description": None,
         "price": 1.590,
         "tax": None,
+        "tags": ["i", "j", "k"],
+        "images": [{"url": "http://1.2.3.4/img/1.jpg", "name": "test_img"}],
     }
 
 
@@ -88,3 +105,59 @@ def test_create_item_existing_item():
 
     assert resp.status_code == HTTPStatus.BAD_REQUEST
     assert resp.json() == {"detail": "Item already exists"}
+
+
+def test_update_item():
+    resp = test_client.put(
+        "/item/1",
+        params={"q": "blahblah"},
+        json={
+            "item": {"name": "abc", "price": 0.32},
+            "user": {"username": "joe", "full_name": "joe bloggs"},
+            "importance": 5,
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["q"] == "blahblah"
+    assert resp.json()["importance"] == 5
+    assert resp.json()["item"]["price"] == 0.32
+    assert resp.json()["user"]["username"] == "joe"
+
+
+def test_update_item_invalid_path():
+    resp = test_client.put(
+        "/item/0",
+        json={
+            "item": {"name": "abc", "price": 0.32},
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert resp.json()["detail"]
+
+
+def test_update_item_missing_mandatory_body():
+    resp = test_client.put(
+        "/item/1",
+        json={
+            "user": {"username": "joe", "full_name": "joe bloggs"},
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert resp.json()["detail"]
+
+
+def test_update_item_invalid_body_field():
+    resp = test_client.put(
+        "/item/1",
+        json={
+            "item": {"name": "abc", "price": -0.32},
+            "user": {"username": "joe", "full_name": "joe bloggs"},
+            "importance": 5,
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert resp.json()["detail"]
