@@ -1,0 +1,6 @@
+[run]
+branch = True
+source = ./
+
+[report]
+omit = test_*.py

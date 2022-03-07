@@ -7,8 +7,8 @@ on:
     branches:
     - main
 jobs:
-  build:
-    name: Build python environment
+  build_and_test:
+    name: Build python environment and run coverage
     runs-on: ubuntu-latest
     steps:
 
@@ -30,10 +30,10 @@ jobs:
       run: pip install coverage
 
     - name: Run test w/ coverage
-      run: coverage run --branch -m pytest .
+      run: coverage run -m pytest .
 
     - name: Gerenate coverage report
-      run: coverage xml --include=main.py
+      run: coverage xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
