@@ -161,3 +161,46 @@ def test_update_item_invalid_body_field():
 
     assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
     assert resp.json()["detail"]
+
+
+def test_create_multiple_images():
+    resp = test_client.post(
+        "/images/multiple/",
+        json=[
+            {"url": "http://127.0.0.1/1.png", "name": "img1"},
+            {"url": "http://127.0.0.1/2.png", "name": "img2"},
+        ],
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()[0] == {"url": "http://127.0.0.1/1.png", "name": "img1"}
+
+
+def test_create_index_weights():
+    resp = test_client.post(
+        "/index-weights/",
+        json={0: "0.5", 1: "1.8", 2: "2.9"},
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["0"] == 0.5
+    assert resp.json()["2"] == 2.9
+
+
+def test_create_index_weights_with_integer_string():
+    resp = test_client.post(
+        "/index-weights/",
+        json={"0": "0.5", "1": "1.8", "2": "2.9"},
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+
+
+def test_create_index_weights_with_alphabetic():
+    resp = test_client.post(
+        "/index-weights/",
+        json={"a": "0.5", "b": "1.8", "c": "2.9"},
+    )
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert resp.json()["detail"]
