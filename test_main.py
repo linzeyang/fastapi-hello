@@ -14,6 +14,40 @@ def test_home():
     assert resp.json() == {"message": "hello, world!"}
 
 
+def test_read_items():
+    resp = test_client.get(
+        "/items",
+        params={
+            "q": "abcdefg",
+            "q-2": ["1", "2", "3"],
+            "q3": "im deprecated",
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["items"]
+    assert resp.json()["q"]
+    assert resp.json()["q2"]
+    assert "q-2" not in resp.json()
+    assert "q3" not in resp.json()
+
+
+def test_read_items_leave_fields_as_default():
+    resp = test_client.get("/items", params={})
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["items"]
+    assert resp.json()["q2"] == ["aa", "bb", "cc"]
+    assert "q" not in resp.json()
+
+
+def test_read_items_invalid_query_param():
+    resp = test_client.get("/items", params={"q": "az"})
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert resp.json()["detail"]
+
+
 def test_read_item():
     resp = test_client.get(
         "/items/1", params={"needy": "abcde"}, headers={"X-Token": "coneofsilence"}
@@ -68,6 +102,7 @@ def test_create_item():
             "id": 3,
             "name": "Bazz",
             "price": 1.590,
+            "tax": 0.891,
             "tags": ["i", "j", "k"],
             "images": [{"url": "http://1.2.3.4/img/1.jpg", "name": "test_img"}],
         },
@@ -79,7 +114,8 @@ def test_create_item():
         "name": "Bazz",
         "description": None,
         "price": 1.590,
-        "tax": None,
+        "tax": 0.891,
+        "price_with_tax": 2.481,
         "tags": ["i", "j", "k"],
         "images": [{"url": "http://1.2.3.4/img/1.jpg", "name": "test_img"}],
     }
@@ -125,6 +161,22 @@ def test_update_item():
     assert resp.json()["user"]["username"] == "joe"
 
 
+def test_update_item_only_mandatory_fields():
+    resp = test_client.put(
+        "/item/1",
+        json={
+            "item": {"name": "abc", "price": 0.32},
+            "importance": 5,
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["importance"] == 5
+    assert resp.json()["item"]["price"] == 0.32
+    assert "user" not in resp.json()
+    assert "q" not in resp.json()
+
+
 def test_update_item_invalid_path():
     resp = test_client.put(
         "/item/0",
@@ -158,6 +210,21 @@ def test_update_item_invalid_body_field():
             "importance": 5,
         },
     )
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert resp.json()["detail"]
+
+
+def test_get_model():
+    for name in ("alexnet", "resnet", "lenet"):
+        resp = test_client.get(f"/model/{name}")
+
+        assert resp.status_code == HTTPStatus.OK
+        assert resp.json()["model_name"] == name
+
+
+def test_get_model_invalid_model():
+    resp = test_client.get("/model/mock_name")
 
     assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
     assert resp.json()["detail"]
