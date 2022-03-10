@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import pytest
 from fastapi.testclient import TestClient
 
 from main import app
@@ -14,15 +15,9 @@ def test_home():
     assert resp.json() == {"message": "hello, world!"}
 
 
-def test_read_items():
-    resp = test_client.get(
-        "/items",
-        params={
-            "q": "abcdefg",
-            "q-2": ["1", "2", "3"],
-            "q3": "im deprecated",
-        },
-    )
+# data_for_read_items is a fixture from conftest.py
+def test_read_items(data_for_read_items):
+    resp = test_client.get("/items", params=data_for_read_items)
 
     assert resp.status_code == HTTPStatus.OK
     assert resp.json()["items"]
@@ -215,16 +210,18 @@ def test_update_item_invalid_body_field():
     assert resp.json()["detail"]
 
 
-def test_get_model():
-    for name in ("alexnet", "resnet", "lenet"):
-        resp = test_client.get(f"/model/{name}")
+@pytest.mark.skipif(False, reason="just playing around")
+@pytest.mark.parametrize("name", ["alexnet", "resnet", "lenet"])
+def test_get_model(name: str):
+    resp = test_client.get(f"/model/{name}")
 
-        assert resp.status_code == HTTPStatus.OK
-        assert resp.json()["model_name"] == name
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["model_name"] == name
 
 
-def test_get_model_invalid_model():
-    resp = test_client.get("/model/mock_name")
+@pytest.mark.parametrize("name", ["mock_name"])
+def test_get_model_invalid_model(name: str):
+    resp = test_client.get(f"/model/{name}")
 
     assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
     assert resp.json()["detail"]
