@@ -3,4 +3,4 @@ branch = True
 source = ./
 
 [report]
-omit = test_*.py
+omit = test_*.py, conftest.py
