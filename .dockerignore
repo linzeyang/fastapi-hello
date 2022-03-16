@@ -1,7 +1,10 @@
 **/__pycache__
+**/.pytest_cache
+**/.mypy_cache
 **/.classpath
 **/.dockerignore
 **/venv
+**/.venv
 **/.git
 **/.gitignore
 **/.project
@@ -22,5 +25,8 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+htmlcov/
+coverage.xml
+.coverage
 README.md
 .github/
