@@ -103,7 +103,7 @@ def test_create_item():
         },
     )
 
-    assert resp.status_code == HTTPStatus.OK
+    assert resp.status_code == HTTPStatus.CREATED
     assert resp.json() == {
         "id": 3,
         "name": "Bazz",
@@ -236,7 +236,7 @@ def test_create_multiple_images():
         ],
     )
 
-    assert resp.status_code == HTTPStatus.OK
+    assert resp.status_code == HTTPStatus.CREATED
     assert resp.json()[0] == {"url": "http://127.0.0.1/1.png", "name": "img1"}
 
 
@@ -246,7 +246,7 @@ def test_create_index_weights():
         json={0: "0.5", 1: "1.8", 2: "2.9"},
     )
 
-    assert resp.status_code == HTTPStatus.OK
+    assert resp.status_code == HTTPStatus.CREATED
     assert resp.json()["0"] == 0.5
     assert resp.json()["2"] == 2.9
 
@@ -257,7 +257,7 @@ def test_create_index_weights_with_integer_string():
         json={"0": "0.5", "1": "1.8", "2": "2.9"},
     )
 
-    assert resp.status_code == HTTPStatus.OK
+    assert resp.status_code == HTTPStatus.CREATED
 
 
 def test_create_index_weights_with_alphabetic():

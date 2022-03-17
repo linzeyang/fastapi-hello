@@ -116,7 +116,7 @@ def read_item(
     }
 
 
-@app.post("/item")
+@app.post("/item", status_code=HTTPStatus.CREATED)
 def create_item(
     item: Item = Body(..., embed=False), x_token: str = Header(...)
 ) -> dict:
@@ -168,11 +168,11 @@ def get_model(model_name: ModelName) -> dict:
     return {"model_name": model_name, "message": "Have some residuals"}
 
 
-@app.post("/images/multiple/")
+@app.post("/images/multiple/", status_code=HTTPStatus.CREATED)
 def create_multiple_images(images: List[Image]):
     return images
 
 
-@app.post("/index-weights/")
+@app.post("/index-weights/", status_code=HTTPStatus.CREATED)
 def create_index_weights(weights: Dict[int, Decimal]):
     return weights
