@@ -1,4 +1,4 @@
-name: Codecov Workflow
+name: Codecov + Codacy Workflow
 on:
   push:
     branches:
@@ -43,3 +43,9 @@ jobs:
         files: ./coverage.xml
         flags: unittests
         verbose: true
+
+    - name: Run Codacy coverage reporter
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: coverage.xml
