@@ -24,8 +24,8 @@ fake_db = {
 
 
 class Image(BaseModel):
-    url: HttpUrl
-    name: str
+    url: HttpUrl = Field(..., example="https://example.org/1.png")
+    name: str = Field(..., example="A pretty image")
 
 
 class Item(BaseModel):
@@ -37,10 +37,22 @@ class Item(BaseModel):
     tags: List[str] = []
     images: Optional[List[Image]] = None
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Foo",
+                "description": "A very nice item",
+                "price": Decimal("0.86"),
+                "tax": Decimal("0.12"),
+                "tags": ["test", "mock"],
+                "images": None,
+            }
+        }
+
 
 class User(BaseModel):
-    username: str
-    full_name: Optional[str] = None
+    username: str = Field(..., example="joebloggs")
+    full_name: Optional[str] = Field(None, example="Joe Bloggs")
 
 
 class ModelName(str, Enum):
@@ -118,7 +130,32 @@ def read_item(
 
 @app.post("/item", status_code=HTTPStatus.CREATED)
 def create_item(
-    item: Item = Body(..., embed=False), x_token: str = Header(...)
+    item: Item = Body(
+        ...,
+        embed=False,
+        examples={
+            "normal": {
+                "summary": "A normal example",
+                "description": "normally do this",
+                "value": {
+                    "name": "Foo",
+                    "description": "A very nice item",
+                    "price": Decimal("0.86"),
+                    "tax": Decimal("0.12"),
+                },
+            },
+            "invalid": {
+                "summary": "An invalid example",
+                "description": "this is invalid",
+                "value": {
+                    "name": 123,
+                    "description": "A very nice item",
+                    "tax": Decimal("0.12"),
+                },
+            },
+        },
+    ),
+    x_token: str = Header(...),
 ) -> dict:
     if x_token != FAKE_SECRET_TOKEN:
         raise HTTPException(
@@ -141,7 +178,17 @@ def create_item(
 @app.put("/item/{item_id}")
 def update_item(
     item_id: int = Path(..., ge=1, title="The ID of the item"),
-    item: Item = Body(...),
+    item: Item = Body(
+        ...,
+        example={
+            "name": "Foo",
+            "description": "A very nice item",
+            "price": Decimal("0.86"),
+            "tax": Decimal("0.12"),
+            "tags": ["test", "mock"],
+            "images": None,
+        },
+    ),
     user: Optional[User] = None,
     importance: int = Body(1, ge=0, le=9),
     q: Optional[str] = None,
