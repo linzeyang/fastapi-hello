@@ -268,3 +268,29 @@ def test_create_index_weights_with_alphabetic():
 
     assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
     assert resp.json()["detail"]
+
+
+def test_create_event():
+    resp = test_client.post(
+        "/event/ad6ac861-e46d-46f5-abe9-1aef94155f5b",
+        json={
+            "start_datetime": "2022-01-01T09:15:27+08:00",
+            "end_datetime": "2022-01-31T21:37:58+08:00",
+            "repeat_at": "12:09:26",
+            "process_after": 180.0,
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.CREATED
+    assert resp.json()["event_id"] == "ad6ac861-e46d-46f5-abe9-1aef94155f5b"
+    assert resp.json()["duration"]
+
+
+def test_create_event_invalid_request():
+    resp = test_client.post(
+        "/event/123456",
+        json={},
+    )
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+    assert resp.json()["detail"]
