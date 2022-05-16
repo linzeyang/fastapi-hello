@@ -2,10 +2,10 @@ from datetime import datetime, time, timedelta
 from decimal import Decimal
 from enum import Enum
 from http import HTTPStatus
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from uuid import UUID
 
-from fastapi import Body, FastAPI, Header, HTTPException, Path, Query
+from fastapi import Body, Cookie, FastAPI, Header, HTTPException, Path, Query
 from pydantic import BaseModel, Field, HttpUrl
 
 FAKE_SECRET_TOKEN = "coneofsilence"
@@ -83,8 +83,9 @@ def read_items(
     ),
     q2: List[str] = Query(["aa", "bb", "cc"], alias="q-2"),
     q3: Optional[str] = Query(None, deprecated=True),
+    ads_id: Optional[str] = Cookie(None, max_length=128, example="70f59c6b"),
 ) -> dict:
-    results = {
+    results: Dict[str, Any] = {
         "items": [
             {"item_id": "Foo"},
             {"item_id": "Bar"},
@@ -95,6 +96,9 @@ def read_items(
         results["q"] = q
 
     results["q2"] = q2
+
+    if ads_id:
+        results["cookies"] = {"ads_id": ads_id}
 
     return results
 
