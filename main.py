@@ -67,8 +67,15 @@ app = FastAPI()
 
 
 @app.get("/")
-def home() -> dict:
-    return {"message": "hello, world!"}
+def home(
+    x_dummy_header: Optional[List[str]] = Header(default=None, convert_underscores=True)
+) -> dict:
+    result: Dict[str, Any] = {"message": "hello, world!"}
+
+    if x_dummy_header:
+        result["dummy_headers"] = x_dummy_header
+
+    return result
 
 
 @app.get("/items")
@@ -110,7 +117,7 @@ def read_item(
     needy: str = Query(...),
     q: Optional[str] = Query(None),
     short: bool = Query(False),
-    x_token: str = Header(...),
+    x_token: str = Header(..., convert_underscores=True),
 ) -> dict:
     """
     :8000/item/321?needy=whoo&short=1
