@@ -1,5 +1,4 @@
-"""This is main.py
-"""
+"""This is main.py"""
 
 from datetime import datetime, time, timedelta
 from decimal import Decimal
