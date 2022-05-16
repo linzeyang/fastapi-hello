@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 from uuid import UUID
 
 from fastapi import Body, Cookie, FastAPI, Header, HTTPException, Path, Query
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, EmailStr, Field, HttpUrl
 
 FAKE_SECRET_TOKEN = "coneofsilence"
 fake_db = {
@@ -55,6 +55,19 @@ class Item(BaseModel):
 class User(BaseModel):
     username: str = Field(..., example="joebloggs")
     full_name: Optional[str] = Field(None, example="Joe Bloggs")
+
+
+class UserIn(BaseModel):
+    username: str
+    password: str
+    email: EmailStr
+    full_name: Optional[str] = None
+
+
+class UserOut(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: Optional[str] = None
 
 
 class ModelName(str, Enum):
@@ -257,3 +270,13 @@ def create_event(
         "process_after": process_after,
         "duration": duration,
     }
+
+
+@app.post(
+    "/user/",
+    response_model=UserOut,
+    response_model_exclude_unset=True,
+    status_code=HTTPStatus.CREATED,
+)
+def create_user(user: UserIn):
+    return user
