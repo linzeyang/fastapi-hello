@@ -36,6 +36,13 @@ def test_read_items_leave_fields_as_default():
     assert "q" not in resp.json()
 
 
+def test_read_items_with_cookie():
+    resp = test_client.get("/items", params={}, cookies={"ads_id": "dummy_cookie"})
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["cookies"]["ads_id"] == "dummy_cookie"
+
+
 def test_read_items_invalid_query_param():
     resp = test_client.get("/items", params={"q": "az"})
 
