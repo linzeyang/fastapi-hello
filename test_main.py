@@ -15,6 +15,16 @@ def test_home():
     assert resp.json() == {"message": "hello, world!"}
 
 
+def test_home_with_duplicate_headers():
+    resp = test_client.get(
+        "/", headers={"x-dummy-header": "foo"}
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert "dummy_headers" in resp.json()
+    assert len(resp.json()["dummy_headers"]) == 1
+
+
 # data_for_read_items is a fixture from conftest.py
 def test_read_items(data_for_read_items):
     resp = test_client.get("/items", params=data_for_read_items)
