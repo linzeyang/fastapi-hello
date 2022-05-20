@@ -16,9 +16,7 @@ def test_home():
 
 
 def test_home_with_duplicate_headers():
-    resp = test_client.get(
-        "/", headers={"x-dummy-header": "foo"}
-    )
+    resp = test_client.get("/", headers={"x-dummy-header": "foo"})
 
     assert resp.status_code == HTTPStatus.OK
     assert "dummy_headers" in resp.json()
@@ -311,3 +309,46 @@ def test_create_event_invalid_request():
 
     assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
     assert resp.json()["detail"]
+
+
+def test_create_user():
+    resp = test_client.post(
+        "/user/",
+        json={
+            "username": "jobbloggs",
+            "password": "P@ssw0rd",
+            "email": "joe@blogs.com",
+            "full_name": "Joe Bloggs",
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.CREATED
+    assert "password" not in resp.json()
+    assert "full_name" in resp.json()
+
+
+def test_create_user_unset_field_excluded():
+    resp = test_client.post(
+        "/user/",
+        json={
+            "username": "jobbloggs",
+            "password": "P@ssw0rd",
+            "email": "joe@blogs.com",
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.CREATED
+    assert "full_name" not in resp.json()
+
+
+def test_create_user_malformed():
+    resp = test_client.post(
+        "/user/",
+        json={
+            "username": "jobbloggs",
+            "email": "joe@blogs.com",
+            "dummy": "foo, bar",
+        },
+    )
+
+    assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
