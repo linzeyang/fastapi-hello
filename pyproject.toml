@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "fastapi-hello"
+version = "0.1.0"
+description = ""
+authors = ["Zeyang Lin <4020306+linzeyang@users.noreply.github.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.81.0"
+pydantic = {extras = ["email"], version = "^1.10.1"}
+uvicorn = {extras = ["standard"], version = "^0.18.3"}
+
+[tool.poetry.dev-dependencies]
+pytest = ">=7.0.0"
+requests = ">=2.27.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+
+[tool.isort]
+py_version=310
+profile = "black"
+
+[tool.pylint.format]
+max-line-length = "88"
