@@ -2,7 +2,7 @@ from datetime import datetime, time, timedelta
 from decimal import Decimal
 from enum import Enum
 from http import HTTPStatus
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 from uuid import UUID
 
 from fastapi import Body, Cookie, FastAPI, Header, HTTPException, Path, Query
@@ -36,8 +36,8 @@ class Item(BaseModel):
     description: Optional[str] = Field(None, max_length=100)
     price: Decimal = Field(..., ge=Decimal())
     tax: Optional[Decimal] = None
-    tags: List[str] = []
-    images: Optional[List[Image]] = None
+    tags: list[str] = []
+    images: Optional[list[Image]] = None
 
     class Config:
         schema_extra = {
@@ -57,17 +57,22 @@ class User(BaseModel):
     full_name: Optional[str] = Field(None, example="Joe Bloggs")
 
 
-class UserIn(BaseModel):
+class UserBase(BaseModel):
     username: str
+    email: EmailStr
+    full_name: Optional[str] = None
+
+
+class UserIn(UserBase):
     password: str
-    email: EmailStr
-    full_name: Optional[str] = None
 
 
-class UserOut(BaseModel):
-    username: str
-    email: EmailStr
-    full_name: Optional[str] = None
+class UserOut(UserBase):
+    pass
+
+
+class UserInDB(UserBase):
+    hashed_password: str
 
 
 class ModelName(str, Enum):
@@ -81,9 +86,9 @@ app = FastAPI()
 
 @app.get("/")
 def home(
-    x_dummy_header: Optional[List[str]] = Header(default=None, convert_underscores=True)
+    x_dummy_header: Optional[list[str]] = Header(default=None, convert_underscores=True)
 ) -> dict:
-    result: Dict[str, Any] = {"message": "hello, world!"}
+    result: dict[str, Any] = {"message": "hello, world!"}
 
     if x_dummy_header:
         result["dummy_headers"] = x_dummy_header
@@ -101,11 +106,11 @@ def read_items(
         title="Query string",
         description="Query string for the items to search",
     ),
-    q2: List[str] = Query(["aa", "bb", "cc"], alias="q-2"),
+    q2: list[str] = Query(["aa", "bb", "cc"], alias="q-2"),
     q3: Optional[str] = Query(None, deprecated=True),
     ads_id: Optional[str] = Cookie(None, max_length=128, example="70f59c6b"),
 ) -> dict:
-    results: Dict[str, Any] = {
+    results: dict[str, Any] = {
         "items": [
             {"item_id": "Foo"},
             {"item_id": "Bar"},
@@ -230,7 +235,7 @@ def update_item(
     return item_dict
 
 
-@app.get("/model/{model_name}")
+@app.get("/model/{model_name}", response_model=dict[str, str])
 def get_model(model_name: ModelName) -> dict:
     if model_name == ModelName.alexnet:
         return {"model_name": model_name, "message": "Deep Learning FTW!"}
@@ -241,17 +246,23 @@ def get_model(model_name: ModelName) -> dict:
     return {"model_name": model_name, "message": "Have some residuals"}
 
 
-@app.post("/images/multiple/", status_code=HTTPStatus.CREATED)
-def create_multiple_images(images: List[Image]):
+@app.post(
+    "/images/multiple/", response_model=list[Image], status_code=HTTPStatus.CREATED
+)
+def create_multiple_images(images: list[Image]):
     return images
 
 
-@app.post("/index-weights/", status_code=HTTPStatus.CREATED)
-def create_index_weights(weights: Dict[int, Decimal]):
+@app.post(
+    "/index-weights/", response_model=dict[int, Decimal], status_code=HTTPStatus.CREATED
+)
+def create_index_weights(weights: dict[int, Decimal]):
     return weights
 
 
-@app.post("/event/{event_id}", status_code=HTTPStatus.CREATED)
+@app.post(
+    "/event/{event_id}", response_model=dict[str, Any], status_code=HTTPStatus.CREATED
+)
 def create_event(
     event_id: UUID,
     start_datetime: Optional[datetime] = Body(None),
@@ -272,6 +283,16 @@ def create_event(
     }
 
 
+def fake_password_hasher(raw_password: str) -> str:
+    return "supersecret" + raw_password
+
+
+def fake_save_user(user_in: UserIn) -> UserInDB:
+    hashed_password = fake_password_hasher(user_in.password)
+    user_in_db = UserInDB(**user_in.dict(), hashed_password=hashed_password)
+    return user_in_db
+
+
 @app.post(
     "/user/",
     response_model=UserOut,
@@ -279,4 +300,4 @@ def create_event(
     status_code=HTTPStatus.CREATED,
 )
 def create_user(user: UserIn):
-    return user
+    return fake_save_user(user_in=user)

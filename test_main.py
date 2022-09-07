@@ -338,7 +338,7 @@ def test_create_user_unset_field_excluded():
     )
 
     assert resp.status_code == HTTPStatus.CREATED
-    assert "full_name" not in resp.json()
+    assert resp.json()["full_name"] is None
 
 
 def test_create_user_malformed():
