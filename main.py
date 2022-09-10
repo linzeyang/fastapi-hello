@@ -5,7 +5,18 @@ from http import HTTPStatus
 from typing import Any, Optional
 from uuid import UUID
 
-from fastapi import Body, Cookie, FastAPI, Header, HTTPException, Path, Query
+from fastapi import (
+    Body,
+    Cookie,
+    FastAPI,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    Path,
+    Query,
+    UploadFile,
+)
 from pydantic import BaseModel, EmailStr, Field, HttpUrl
 
 FAKE_SECRET_TOKEN = "coneofsilence"
@@ -301,3 +312,50 @@ def fake_save_user(user_in: UserIn) -> UserInDB:
 )
 def create_user(user: UserIn):
     return fake_save_user(user_in=user)
+
+
+@app.post("/login/")
+def login(username: str = Form(), password: str = Form()):
+    return {"username": username, "password_hash": hash(password)}
+
+
+@app.post("/file/")
+async def create_file(
+    file: Optional[bytes] = File(default=None, description="A file read as bytes"),
+    fileb: Optional[UploadFile] = File(default=None),
+    token: Optional[str] = Form(default=None),
+):
+    if not file:
+        return {"message": "No file sent"}
+
+    return {
+        "file_size": len(file),
+        "fileb_name": fileb.filename if fileb else None,
+        "token": token,
+    }
+
+
+@app.post("/files/")
+async def create_files(
+    files: list[bytes] = File(description="Multiple files as bytes"),
+):
+    return {"file_sizes": [len(file) for file in files]}
+
+
+@app.post("/uploadfile/")
+async def create_upload_file(
+    file: Optional[UploadFile] = File(
+        default=None, description="A file read as UploadFile"
+    )
+):
+    if not file:
+        return {"message": "No upload file sent"}
+
+    return {"filename": file.filename}
+
+
+@app.post("/uploadfiles/")
+async def create_upload_files(
+    files: list[UploadFile] = File(description="Multiple files as UploadFile"),
+):
+    return {"filenames": [file.filename for file in files]}
