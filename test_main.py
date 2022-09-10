@@ -352,3 +352,81 @@ def test_create_user_malformed():
     )
 
     assert resp.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+
+
+def test_login():
+    resp = test_client.post(
+        "/login/", data={"username": "joeblogs", "password": "Passw0rd"}
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["username"] == "joeblogs"
+    assert resp.json()["password_hash"] != "Passw0rd"
+
+
+def test_create_file():
+    resp = test_client.post(
+        "/file/",
+        files=[
+            ("file", ("dummy.txt", "hello\nworld\n")),
+            ("fileb", ("dummy2.txt", "user\python\n")),
+        ],
+        data={"token": "abcdef"},
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["file_size"] == len("hello\nworld\n".encode())
+    assert resp.json()["fileb_name"] == "dummy2.txt"
+    assert resp.json()["token"] == "abcdef"
+
+
+def test_create_file_with_no_file():
+    resp = test_client.post("/file/")
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["message"] == "No file sent"
+
+
+def test_create_files():
+    resp = test_client.post(
+        "/files/",
+        files=[
+            ("files", ("dummy1.txt", "hello\nworld\n")),
+            ("files", ("dummy2.txt", "use\npython\n")),
+        ],
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["file_sizes"] == [
+        len("hello\nworld\n".encode()),
+        len("use\npython\n".encode()),
+    ]
+
+
+def test_create_upload_file():
+    resp = test_client.post(
+        "/uploadfile/", files={"file": ("dummy.txt", "hello\nworld\n")}
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["filename"] == "dummy.txt"
+
+
+def test_create_upload_file_with_no_file():
+    resp = test_client.post("/uploadfile/")
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["message"] == "No upload file sent"
+
+
+def test_create_upload_files():
+    resp = test_client.post(
+        "/uploadfiles/",
+        files=[
+            ("files", ("dummy1.txt", "hello\nworld\n")),
+            ("files", ("dummy2.txt", "use\npython\n")),
+        ],
+    )
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["filenames"] == ["dummy1.txt", "dummy2.txt"]
