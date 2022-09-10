@@ -369,7 +369,7 @@ def test_create_file():
         "/file/",
         files=[
             ("file", ("dummy.txt", "hello\nworld\n")),
-            ("fileb", ("dummy2.txt", "user\python\n")),
+            ("fileb", ("dummy2.txt", "user\npython\n")),
         ],
         data={"token": "abcdef"},
     )
