@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.10.6-slim-bullseye
+FROM python:3.10.7-slim-bullseye
 
 EXPOSE 8000
 
