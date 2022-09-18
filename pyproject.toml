@@ -4,6 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["Zeyang Lin <4020306+linzeyang@users.noreply.github.com>"]
 license = "MIT"
+readme = "README.md"
+repository = "https://github.com/linzeyang/fastapi-hello"
 
 [tool.poetry.dependencies]
 python = "^3.9"
