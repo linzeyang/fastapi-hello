@@ -26,14 +26,11 @@ jobs:
     - name: Install dependencies
       run: poetry install -vv --no-root --with=dev
 
-    - name: Install coverage
-      run: poetry add coverage
-
     - name: Run test w/ coverage
       run: poetry run coverage run -m pytest .
 
     - name: Gerenate coverage report
-      run: coverage xml
+      run: poetry run coverage xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
