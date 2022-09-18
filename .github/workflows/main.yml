@@ -30,4 +30,4 @@ jobs:
       run: poetry install -vv --no-root --with=dev
 
     - name: Run test
-      run: pytest .
+      run: poetry run pytest .
