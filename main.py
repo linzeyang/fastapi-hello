@@ -17,8 +17,10 @@ from fastapi import (
     HTTPException,
     Path,
     Query,
+    Request,
     UploadFile,
 )
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, HttpUrl
 
 FAKE_SECRET_TOKEN = "coneofsilence"
@@ -94,7 +96,23 @@ class ModelName(str, Enum):
     lenet = "lenet"
 
 
+class UnicornException(Exception):
+    def __init__(self, name: str) -> None:
+        super().__init__()
+        self.name = name
+
+
 app = FastAPI()
+
+
+@app.exception_handler(UnicornException)
+async def unicorn_exception_handler(request: Request, exc: UnicornException):
+    return JSONResponse(
+        status_code=HTTPStatus.IM_A_TEAPOT,
+        content={
+            "message": f"Oops! {exc.name} did something. There goes a rainbow...",
+        },
+    )
 
 
 @app.get("/")
@@ -158,7 +176,9 @@ def read_item(
     """
     if x_token != FAKE_SECRET_TOKEN:
         raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST, detail="Invalid X-Token header"
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="Invalid X-Token header",
+            headers={"X-Error": "token"},
         )
 
     if item_id not in fake_db:
@@ -203,7 +223,9 @@ def create_item(
 ) -> dict:
     if x_token != FAKE_SECRET_TOKEN:
         raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST, detail="Invalid X-Token header"
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail="Invalid X-Token header",
+            headers={"X-Error": "token"},
         )
 
     if item.id in fake_db:
@@ -363,3 +385,11 @@ async def create_upload_files(
     files: list[UploadFile] = File(description="Multiple files as UploadFile"),
 ):
     return {"filenames": [file.filename for file in files]}
+
+
+@app.get("/unicorns/{name}")
+async def read_unicorn(name: str = Path(..., max_length=128)):
+    if name == "yolo":
+        raise UnicornException(name=name)
+
+    return {"unicorn": {"name": name}}

@@ -433,3 +433,18 @@ def test_create_upload_files():
 
     assert resp.status_code == HTTPStatus.OK
     assert resp.json()["filenames"] == ["dummy1.txt", "dummy2.txt"]
+
+
+def test_read_unicorn():
+    resp = test_client.get("/unicorns/alpha")
+
+    assert resp.status_code == HTTPStatus.OK
+    assert resp.json()["unicorn"]["name"] == "alpha"
+
+
+def test_read_unicorn_should_return_418():
+    resp = test_client.get("/unicorns/yolo")
+
+    assert resp.status_code == HTTPStatus.IM_A_TEAPOT
+    assert "unicorn" not in resp.json()
+    assert "yolo" in resp.json()["message"]
