@@ -9,7 +9,7 @@ repository = "https://github.com/linzeyang/fastapi-hello"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-fastapi = "^0.85.0"
+fastapi = "^0.85.1"
 pydantic = {extras = ["email"], version = "^1.10.2"}
 python-multipart = "^0.0.5"
 uvicorn = {extras = ["standard"], version = "^0.18.3"}
