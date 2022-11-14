@@ -9,15 +9,15 @@ repository = "https://github.com/linzeyang/fastapi-hello"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.86.0"
+fastapi = "^0.87.0"
 pydantic = {extras = ["email"], version = "^1.10.2"}
 python-multipart = "^0.0.5"
 uvicorn = {extras = ["standard"], version = "^0.19.0"}
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^6.5.0"
+httpx = "^0.23.0"
 pytest = "^7.2.0"
-requests = "^2.28.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
