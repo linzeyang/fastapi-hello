@@ -45,7 +45,9 @@ def test_read_items_leave_fields_as_default():
 
 
 def test_read_items_with_cookie():
-    resp = test_client.get("/items", params={}, cookies={"ads_id": "dummy_cookie"})
+    resp = TestClient(app=app, cookies={"ads_id": "dummy_cookie"}).get(
+        "/items", params={}
+    )
 
     assert resp.status_code == HTTPStatus.OK
     assert resp.json()["cookies"]["ads_id"] == "dummy_cookie"
@@ -368,8 +370,8 @@ def test_create_file():
     resp = test_client.post(
         "/file/",
         files=[
-            ("file", ("dummy.txt", "hello\nworld\n")),
-            ("fileb", ("dummy2.txt", "user\npython\n")),
+            ("file", ("dummy.txt", b"hello\nworld\n")),
+            ("fileb", ("dummy2.txt", b"user\npython\n")),
         ],
         data={"token": "abcdef"},
     )
@@ -391,8 +393,8 @@ def test_create_files():
     resp = test_client.post(
         "/files/",
         files=[
-            ("files", ("dummy1.txt", "hello\nworld\n")),
-            ("files", ("dummy2.txt", "use\npython\n")),
+            ("files", ("dummy1.txt", b"hello\nworld\n")),
+            ("files", ("dummy2.txt", b"use\npython\n")),
         ],
     )
 
@@ -405,7 +407,7 @@ def test_create_files():
 
 def test_create_upload_file():
     resp = test_client.post(
-        "/uploadfile/", files={"file": ("dummy.txt", "hello\nworld\n")}
+        "/uploadfile/", files={"file": ("dummy.txt", b"hello\nworld\n")}
     )
 
     assert resp.status_code == HTTPStatus.OK
@@ -423,8 +425,8 @@ def test_create_upload_files():
     resp = test_client.post(
         "/uploadfiles/",
         files=[
-            ("files", ("dummy1.txt", "hello\nworld\n")),
-            ("files", ("dummy2.txt", "use\npython\n")),
+            ("files", ("dummy1.txt", b"hello\nworld\n")),
+            ("files", ("dummy2.txt", b"use\npython\n")),
         ],
     )
 
