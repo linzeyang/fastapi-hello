@@ -33,3 +33,7 @@ profile = "black"
 
 [tool.pylint.format]
 max-line-length = "88"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
