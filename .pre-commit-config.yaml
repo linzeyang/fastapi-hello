@@ -4,7 +4,6 @@ repos:
     hooks:
       - id: check-added-large-files
       - id: check-ast
-      - id: check-byte-order-marker
       - id: check-case-conflict
       - id: check-docstring-first
       - id: check-json
@@ -14,6 +13,7 @@ repos:
       - id: debug-statements
       - id: detect-private-key
       - id: end-of-file-fixer
+      - id: fix-byte-order-marker
       - id: requirements-txt-fixer
       - id: trailing-whitespace
   - repo: https://github.com/psf/black
