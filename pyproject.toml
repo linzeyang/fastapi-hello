@@ -11,7 +11,7 @@ repository = "https://github.com/linzeyang/fastapi-hello"
 python = "^3.10"
 fastapi = "^0.92.0"
 pydantic = {extras = ["email"], version = "^1.10.5"}
-python-multipart = "^0.0.5"
+python-multipart = "^0.0.6"
 uvicorn = {extras = ["standard"], version = "^0.20.0"}
 
 [tool.poetry.group.dev.dependencies]
