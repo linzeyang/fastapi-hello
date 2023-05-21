@@ -6,6 +6,25 @@ authors = ["Zeyang Lin <4020306+linzeyang@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/linzeyang/fastapi-hello"
+keywords = ["fastapi", "web"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: FastAPI",
+    "Framework :: Pydantic",
+    "Framework :: Pytest",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Internet :: WWW/HTTP",
+    "Typing :: Typed"
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -15,9 +34,18 @@ python-multipart = "^0.0.6"
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
 
 [tool.poetry.group.dev.dependencies]
-coverage = "^7.2.0"
-httpx = "^0.24.0"
-pytest = "^7.3.0"
+coverage = "^7.2"
+httpx = "^0.24"
+pytest = "^7.3"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[[tool.poetry.source]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+priority = "supplemental"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
