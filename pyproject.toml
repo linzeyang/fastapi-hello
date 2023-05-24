@@ -29,7 +29,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.95.2"
-pydantic = {extras = ["email"], version = "^1.10.7"}
+pydantic = {extras = ["email"], version = "^1.10.8"}
 python-multipart = "^0.0.6"
 uvicorn = {extras = ["standard"], version = "^0.22.0"}
 
