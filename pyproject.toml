@@ -37,6 +37,7 @@ uvicorn = {extras = ["standard"], version = "^0.22.0"}
 coverage = "^7.2"
 httpx = "^0.24"
 pytest = "^7.3"
+memray = "^1.7.0"
 
 [[tool.poetry.source]]
 name = "PyPI"
