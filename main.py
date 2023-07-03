@@ -119,7 +119,7 @@ def read_items(
     ),
     q2: list[str] = Query(["aa", "bb", "cc"], alias="q-2"),
     q3: Optional[str] = Query(None, deprecated=True),
-    ads_id: Optional[str] = Cookie(None, max_length=128, example="70f59c6b"),
+    ads_id: Optional[str] = Cookie(None, max_length=128, examples=["70f59c6b"]),
 ) -> dict:
     results: dict[str, Any] = {
         "items": [
@@ -175,8 +175,8 @@ def create_item(
     item: Item = Body(
         ...,
         embed=False,
-        examples={
-            "normal": {
+        examples=[
+            {
                 "summary": "A normal example",
                 "description": "normally do this",
                 "value": {
@@ -186,7 +186,7 @@ def create_item(
                     "tax": Decimal("0.12"),
                 },
             },
-            "invalid": {
+            {
                 "summary": "An invalid example",
                 "description": "this is invalid",
                 "value": {
@@ -195,7 +195,7 @@ def create_item(
                     "tax": Decimal("0.12"),
                 },
             },
-        },
+        ],
     ),
     x_token: str = Header(...),
 ) -> dict:
@@ -222,14 +222,16 @@ def update_item(
     item_id: int = Path(..., ge=1, title="The ID of the item"),
     item: Item = Body(
         ...,
-        example={
-            "name": "Foo",
-            "description": "A very nice item",
-            "price": Decimal("0.86"),
-            "tax": Decimal("0.12"),
-            "tags": ["test", "mock"],
-            "images": None,
-        },
+        examples=[
+            {
+                "name": "Foo",
+                "description": "A very nice item",
+                "price": Decimal("0.86"),
+                "tax": Decimal("0.12"),
+                "tags": ["test", "mock"],
+                "images": None,
+            }
+        ],
     ),
     user: Optional[User] = None,
     importance: int = Body(1, ge=0, le=9),
