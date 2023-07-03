@@ -1,4 +1,4 @@
 fastapi==0.99.1
-pydantic[email]==1.10.10
+pydantic[email]==2.0
 python-multipart==0.0.6
 uvicorn[standard]==0.22.0
