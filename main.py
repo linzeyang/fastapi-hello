@@ -1,3 +1,5 @@
+"""Currently the entry-point of the app"""
+
 from datetime import datetime, time, timedelta
 from decimal import Decimal
 from enum import Enum
@@ -17,7 +19,7 @@ from fastapi import (
     Query,
     UploadFile,
 )
-from pydantic import BaseModel, EmailStr, Field, HttpUrl
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, HttpUrl
 
 FAKE_SECRET_TOKEN = "coneofsilence"
 fake_db = {
@@ -37,8 +39,8 @@ fake_db = {
 
 
 class Image(BaseModel):
-    url: HttpUrl = Field(..., example="https://example.org/1.png")
-    name: str = Field(..., example="A pretty image")
+    url: HttpUrl = Field(..., examples=["https://example.org/1.png"])
+    name: str = Field(..., examples=["A pretty image"])
 
 
 class Item(BaseModel):
@@ -49,9 +51,8 @@ class Item(BaseModel):
     tax: Optional[Decimal] = None
     tags: list[str] = []
     images: Optional[list[Image]] = None
-
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "name": "Foo",
                 "description": "A very nice item",
@@ -61,11 +62,12 @@ class Item(BaseModel):
                 "images": None,
             }
         }
+    )
 
 
 class User(BaseModel):
-    username: str = Field(..., example="joebloggs")
-    full_name: Optional[str] = Field(None, example="Joe Bloggs")
+    username: str = Field(..., examples=["joebloggs"])
+    full_name: Optional[str] = Field(None, examples=["Joe Bloggs"])
 
 
 class UserBase(BaseModel):
@@ -113,7 +115,7 @@ def read_items(
         None,
         min_length=3,
         max_length=50,
-        regex=r"^\w+$",
+        pattern=r"^\w+$",
         title="Query string",
         description="Query string for the items to search",
     ),
@@ -209,7 +211,7 @@ def create_item(
             status_code=HTTPStatus.BAD_REQUEST, detail="Item already exists"
         )
 
-    item_dict = item.dict()
+    item_dict = item.model_dump()
 
     if item.tax:
         item_dict["price_with_tax"] = item.price + item.tax
@@ -237,10 +239,10 @@ def update_item(
     importance: int = Body(1, ge=0, le=9),
     q: Optional[str] = None,
 ) -> dict:
-    item_dict = {"id": item_id, "importance": importance, "item": item.dict()}
+    item_dict = {"id": item_id, "importance": importance, "item": item.model_dump()}
 
     if user:
-        item_dict["user"] = user.dict()
+        item_dict["user"] = user.model_dump()
 
     if q:
         item_dict["q"] = q
@@ -302,7 +304,7 @@ def fake_password_hasher(raw_password: str) -> str:
 
 def fake_save_user(user_in: UserIn) -> UserInDB:
     hashed_password = fake_password_hasher(user_in.password)
-    user_in_db = UserInDB(**user_in.dict(), hashed_password=hashed_password)
+    user_in_db = UserInDB(**user_in.model_dump(), hashed_password=hashed_password)
     return user_in_db
 
 
