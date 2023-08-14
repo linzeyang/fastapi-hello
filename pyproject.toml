@@ -34,7 +34,7 @@ python-multipart = "^0.0.6"
 uvicorn = {extras = ["standard"], version = "^0.23.2"}
 
 [tool.poetry.group.dev.dependencies]
-coverage = "^7.2"
+coverage = "^7.3"
 httpx = "^0.24"
 pytest = "^7.4"
 memray = "^1.9"
