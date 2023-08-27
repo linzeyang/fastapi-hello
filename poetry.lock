@@ -182,13 +182,13 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "fastapi"
-version = "0.101.1"
+version = "0.103.0"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "fastapi-0.101.1-py3-none-any.whl", hash = "sha256:aef5f8676eb1b8389952e1fe734abe20f04b71f6936afcc53b320ba79b686a4b"},
-    {file = "fastapi-0.101.1.tar.gz", hash = "sha256:7b32000d14ca9992f7461117b81e4ef9ff0c07936af641b4fe40e67d5f9d63cb"},
+    {file = "fastapi-0.103.0-py3-none-any.whl", hash = "sha256:61ab72c6c281205dd0cbaccf503e829a37e0be108d965ac223779a8479243665"},
+    {file = "fastapi-0.103.0.tar.gz", hash = "sha256:4166732f5ddf61c33e9fa4664f73780872511e0598d4d5434b1816dc1e6d9421"},
 ]
 
 [package.dependencies]
@@ -453,6 +453,11 @@ files = [
     {file = "memray-1.9.1-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3b3c634dac856f5e5d899a944509116f53c36638559f43dda6255333068274b8"},
     {file = "memray-1.9.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b80f09e178edbc0de6d41d55592ec209936cccb611638b3e7da2c45693433e2b"},
     {file = "memray-1.9.1-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:c602969b1e6dc9502a6911b721536a0209423e798b6cdc690fa0f5b8de02653c"},
+    {file = "memray-1.9.1-cp312-cp312-macosx_10_14_x86_64.whl", hash = "sha256:7efaa1da4c768e14423eb89391aa597f3be1b38f91fe0da7b10d38e332e546c6"},
+    {file = "memray-1.9.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:a92b0d3bf7ef3106653d8b803675dc92a3fc0fd4d1e9bd8f219890bd195bf8af"},
+    {file = "memray-1.9.1-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:010cc51f2f6cb18f4aee52eb36de5d8c361e792a181cb7026add2fe78f32dd77"},
+    {file = "memray-1.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:06f9c6ff1ff6fe577f6168fff9b3afa6221fd5dfdcac42e99d504131765a28a2"},
+    {file = "memray-1.9.1-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:04724ab90e9614df0efbf8ef90a15f46e2b8bd2dfbed887eff8e3de9953621a3"},
     {file = "memray-1.9.1-cp37-cp37m-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:c2a0a4b6d48f7a6ac18ba475a1deaba3f1c237ee37547a34680ee449c393aacc"},
     {file = "memray-1.9.1-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:a47a39af7ea6960a54a80069bc912b6879046f6e8310d46d6286568c76aea50a"},
     {file = "memray-1.9.1-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3aed29f34bac1a1a6b5ea47700123b3fc2cee2c9c21fe7bc245edcf704d556fd"},
@@ -1014,4 +1019,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "3c265aa3ac511e6a109ebff2231b758d700c10f5b0347921f126bb5d1cbea75e"
+content-hash = "91afdc76d94654f370b180391ab444b407dff545bfb9ffacd842d7382c0399e7"
