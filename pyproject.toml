@@ -47,6 +47,13 @@ build-backend = "poetry.core.masonry.api"
 line-length = 88
 target-version = ['py310']
 
+[tool.coverage.run]
+branch = true
+source = [ "./" ]
+
+[tool.coverage.report]
+omit = [ "test_*.py", "conftest.py" ]
+
 [tool.isort]
 py_version=310
 profile = "black"
