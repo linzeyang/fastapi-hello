@@ -61,6 +61,12 @@ profile = "black"
 [tool.pylint.format]
 max-line-length = "88"
 
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = [ "./" ]
+python_files = [ "test_*.py" ]
+console_output_style = "count"
+
 [tool.ruff]
 line-length = 88
 target-version = "py310"
