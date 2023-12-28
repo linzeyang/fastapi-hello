@@ -29,13 +29,13 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.106.0"
+fastapi = "^0.108.0"
 pydantic = {extras = ["email"], version = "^2.5.3"}
 python-multipart = "^0.0.6"
 uvicorn = {extras = ["standard"], version = "^0.25.0"}
 
 [tool.poetry.group.dev.dependencies]
-coverage = "^7.3"
+coverage = "^7.4"
 httpx = "^0.26"
 pytest = "^7.4"
 memray = "^1.11"
