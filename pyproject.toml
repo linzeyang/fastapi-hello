@@ -32,7 +32,7 @@ python = "^3.10"
 fastapi = "^0.109.0"
 pydantic = {extras = ["email"], version = "^2.5.3"}
 python-multipart = "^0.0.6"
-uvicorn = {extras = ["standard"], version = "^0.25.0"}
+uvicorn = {extras = ["standard"], version = "^0.26.0"}
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^7.4"
