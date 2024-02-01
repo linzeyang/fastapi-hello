@@ -39,7 +39,10 @@ jobs:
         fail_ci_if_error: true
         files: ./coverage.xml
         flags: unittests
+        name: codecov-umbrella
         verbose: true
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     # - name: Run Codacy coverage reporter
     #   uses: codacy/codacy-coverage-reporter-action@v1
