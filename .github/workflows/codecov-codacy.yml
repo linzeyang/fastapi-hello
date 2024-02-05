@@ -1,4 +1,5 @@
 name: Codecov + Codacy Workflow
+
 on:
   push:
     branches:
@@ -6,6 +7,9 @@ on:
   pull_request:
     branches:
     - main
+
+permissions: read-all
+
 jobs:
   build_and_test:
     name: Build python environment and run coverage

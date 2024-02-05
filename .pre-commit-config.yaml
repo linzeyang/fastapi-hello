@@ -29,7 +29,8 @@ repos:
     hooks:
       - id: poetry-check
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.14
+    rev: v0.2.0
     hooks:
       - id: ruff
+        args: ["--config=./pyproject.toml"]
 exclude: ^.vscode/

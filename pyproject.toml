@@ -29,9 +29,9 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.109.0"
-pydantic = {extras = ["email"], version = "^2.6.0"}
-python-multipart = "^0.0.6"
+fastapi = "^0.109.2"
+pydantic = {extras = ["email"], version = "^2.6.1"}
+python-multipart = "^0.0.7"
 uvicorn = {extras = ["standard"], version = "^0.27.0.post1"}
 
 [tool.poetry.group.dev.dependencies]
@@ -71,3 +71,8 @@ console_output_style = "count"
 [tool.ruff]
 line-length = 88
 target-version = "py310"
+output-format = "full"
+
+[tool.ruff.lint]
+select = ["B", "C", "E", "F", "I", "Q", "S", "W"]
+ignore = ["B008", "S101", "S105"]
