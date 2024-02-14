@@ -31,8 +31,8 @@ classifiers = [
 python = "^3.10"
 fastapi = "^0.109.2"
 pydantic = {extras = ["email"], version = "^2.6.1"}
-python-multipart = "^0.0.7"
-uvicorn = {extras = ["standard"], version = "^0.27.0.post1"}
+python-multipart = "^0.0.9"
+uvicorn = {extras = ["standard"], version = "^0.27.1"}
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^7.4"
