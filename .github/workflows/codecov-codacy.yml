@@ -24,17 +24,20 @@ jobs:
         python-version: "3.10"
         architecture: x64
 
-    - name: Install poetry
-      run: pip install pipx && pipx install poetry
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    - name: Create a virtual environment
+      run: uv venv
 
     - name: Install dependencies
-      run: poetry install --no-root --with=dev
+      run: uv pip install -r requirements.dev.txt
 
-    - name: Run test w/ coverage
-      run: poetry run coverage run -m pytest .
+    - name: Run tests w/ coverage
+      run: source .venv/bin/activate && coverage run -m pytest .
 
     - name: Gerenate coverage report
-      run: poetry run coverage xml
+      run: source .venv/bin/activate && coverage xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
