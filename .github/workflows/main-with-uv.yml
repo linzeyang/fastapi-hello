@@ -1,0 +1,33 @@
+name: Main Workflow with uv
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+jobs:
+  build:
+    strategy:
+      matrix:
+        python: [ '3.10', '3.11', '3.12' ]
+    name: Build python ${{ matrix.python }} environment
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: Setup python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python }}
+        architecture: x64
+
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    - name: Install dependencies
+      run: uv pip install -r requirements.dev.txt
+
+    - name: Run test
+      run: pytest .
