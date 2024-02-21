@@ -1,0 +1,58 @@
+name: Codecov + Codacy Workflow
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+permissions: read-all
+
+jobs:
+  build_and_test:
+    name: Build python environment and run coverage
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: Setup python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+        architecture: x64
+
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    - name: Virtual env
+      run: uv venv
+
+    - name: Install dependencies
+      run: uv pip install -r requirements.dev.txt
+
+    - name: Run test w/ coverage
+      run: source .venv/bin/activate && coverage run -m pytest .
+
+    - name: Gerenate coverage report
+      run: source .venv/bin/activate && coverage xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        directory: ./
+        fail_ci_if_error: true
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        verbose: true
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    # - name: Run Codacy coverage reporter
+    #   uses: codacy/codacy-coverage-reporter-action@v1
+    #   with:
+    #     project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+    #     coverage-reports: coverage.xml
