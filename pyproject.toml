@@ -38,7 +38,7 @@ uvicorn = {extras = ["standard"], version = "^0.29.0"}
 coverage = "^7.4"
 httpx = "^0.27"
 pytest = "^8.1"
-memray = "^1.11"
+memray = "^1.12"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
