@@ -32,12 +32,12 @@ python = "^3.10"
 fastapi = "^0.111.1"
 pydantic = {extras = ["email"], version = "^2.8.2"}
 python-multipart = "^0.0.9"
-uvicorn = {extras = ["standard"], version = "^0.30.1"}
+uvicorn = {extras = ["standard"], version = "^0.30.3"}
 
 [tool.poetry.group.dev.dependencies]
 coverage = "^7.6"
 httpx = "^0.27"
-pytest = "^8.2"
+pytest = "^8.3"
 memray = "^1.13"
 
 [build-system]
@@ -63,7 +63,7 @@ profile = "black"
 max-line-length = "88"
 
 [tool.pytest.ini_options]
-minversion = "7.0"
+minversion = "8.0"
 testpaths = [ "./" ]
 python_files = [ "test_*.py" ]
 console_output_style = "count"
