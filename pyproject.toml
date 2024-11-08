@@ -1,14 +1,23 @@
-[tool.poetry]
+[project]
 name = "fastapi-hello"
 version = "0.1.0"
-description = ""
-authors = ["Zeyang Lin <4020306+linzeyang@users.noreply.github.com>"]
-license = "MIT"
+description = "Default template for PDM package"
+authors = [
+    { name = "Zeyang Lin", email = "4020306+linzeyang@users.noreply.github.com" },
+]
+dependencies = [
+    "fastapi==0.115.4",
+    "pydantic[email]==2.9.2",
+    "python-multipart==0.0.17",
+    "uvicorn[standard]==0.32.0",
+]
+requires-python = ">=3.10"
 readme = "README.md"
-repository = "https://github.com/linzeyang/fastapi-hello"
-keywords = ["fastapi", "web"]
+license = { text = "MIT" }
+keywords = ["fastapi", "web", "api", "asyncio", "pydantic"]
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
     "Framework :: FastAPI",
     "Framework :: Pydantic",
     "Framework :: Pytest",
@@ -25,25 +34,19 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Internet :: WWW/HTTP",
-    "Typing :: Typed"
+    "Typing :: Typed",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-fastapi = "^0.115.4"
-pydantic = {extras = ["email"], version = "^2.9.2"}
-python-multipart = "^0.0.17"
-uvicorn = {extras = ["standard"], version = "^0.32.0"}
+[project.optional-dependencies]
+dev = [
+    "coverage>=7.6,<8.0",
+    "httpx>=0.27,<0.28",
+    "memray>=1.14,<2.0",
+    "pytest>=8.3,<9.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-coverage = "^7.6"
-httpx = "^0.27"
-pytest = "^8.3"
-memray = "^1.14"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[project.urls]
+Repository = "https://github.com/linzeyang/fastapi-hello"
 
 [tool.black]
 line-length = 88
@@ -51,13 +54,13 @@ target-version = ['py310']
 
 [tool.coverage.run]
 branch = true
-source = [ "./" ]
+source = ["./"]
 
 [tool.coverage.report]
-omit = [ "test_*.py", "conftest.py" ]
+omit = ["test_*.py", "conftest.py"]
 
 [tool.isort]
-py_version=310
+py_version = 310
 profile = "black"
 
 [tool.pylint.format]
@@ -65,8 +68,8 @@ max-line-length = "88"
 
 [tool.pytest.ini_options]
 minversion = "8.0"
-testpaths = [ "./" ]
-python_files = [ "test_*.py" ]
+testpaths = ["./"]
+python_files = ["test_*.py"]
 console_output_style = "count"
 
 [tool.ruff]
@@ -77,3 +80,6 @@ output-format = "full"
 [tool.ruff.lint]
 select = ["B", "C", "E", "F", "I", "Q", "S", "W"]
 ignore = ["B008", "S101", "S105"]
+
+[tool.pdm]
+distribution = false
