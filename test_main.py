@@ -378,7 +378,7 @@ def test_create_file():
     )
 
     assert resp.status_code == HTTPStatus.OK
-    assert resp.json()["file_size"] == len("hello\nworld\n".encode())
+    assert resp.json()["file_size"] == len(b"hello\nworld\n")
     assert resp.json()["fileb_name"] == "dummy2.txt"
     assert resp.json()["token"] == "abcdef"
 
@@ -401,8 +401,8 @@ def test_create_files():
 
     assert resp.status_code == HTTPStatus.OK
     assert resp.json()["file_sizes"] == [
-        len("hello\nworld\n".encode()),
-        len("use\npython\n".encode()),
+        len(b"hello\nworld\n"),
+        len(b"use\npython\n"),
     ]
 
 
