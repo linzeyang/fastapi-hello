@@ -17,20 +17,20 @@ repos:
       - id: requirements-txt-fixer
       - id: trailing-whitespace
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 25.1.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
+    rev: 6.0.0
     hooks:
       - id: isort
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.2
+    rev: v0.9.5
     hooks:
       - id: ruff
         args: ["--config=./pyproject.toml"]
   - repo: https://github.com/pdm-project/pdm
-    rev: 2.22.2
+    rev: 2.22.3
     hooks:
       - id: pdm-lock-check
   - repo: https://github.com/asottile/pyupgrade
