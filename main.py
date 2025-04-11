@@ -117,7 +117,9 @@ async def unicorn_exception_handler(request: Request, exc: UnicornException):
 
 @app.get("/")
 def home(
-    x_dummy_header: Optional[list[str]] = Header(default=None, convert_underscores=True)
+    x_dummy_header: Optional[list[str]] = Header(
+        default=None, convert_underscores=True
+    ),
 ) -> dict:
     result: dict[str, Any] = {"message": "hello, world!"}
 
@@ -372,7 +374,7 @@ async def create_files(
 async def create_upload_file(
     file: Optional[UploadFile] = File(
         default=None, description="A file read as UploadFile"
-    )
+    ),
 ):
     if not file:
         return {"message": "No upload file sent"}
