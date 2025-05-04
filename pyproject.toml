@@ -7,9 +7,9 @@ authors = [
 ]
 dependencies = [
     "fastapi==0.115.12",
-    "pydantic[email]==2.11.3",
+    "pydantic[email]==2.11.4",
     "python-multipart==0.0.20",
-    "uvicorn[standard]==0.34.0",
+    "uvicorn[standard]==0.34.2",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -39,7 +39,7 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-    "coverage>=7.7,<8.0",
+    "coverage>=7.8,<8.0",
     "httpx>=0.28,<1",
     "memray>=1.16,<2.0",
     "pytest>=8.3,<9.0",
