@@ -41,7 +41,7 @@ classifiers = [
 dev = [
     "coverage>=7.10,<8.0",
     "httpx>=0.28,<1",
-    "memray>=1.17,<2.0",
+    "memray>=1.18,<2.0",
     "pytest>=8.4,<9.0",
 ]
 
