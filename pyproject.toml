@@ -1,15 +1,15 @@
 [project]
 name = "fastapi-hello"
 version = "0.1.0"
-description = "Default template for PDM package"
+description = "A simple FastAPI application example"
 authors = [
     { name = "Zeyang Lin", email = "4020306+linzeyang@users.noreply.github.com" },
 ]
 dependencies = [
-    "fastapi==0.116.2",
-    "pydantic[email]==2.11.9",
+    "fastapi==0.118.2",
+    "pydantic[email]==2.12.0",
     "python-multipart==0.0.20",
-    "uvicorn[standard]==0.35.0",
+    "uvicorn[standard]==0.37.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -39,10 +39,10 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-    "coverage>=7.10,<8.0",
+    "coverage>=7.10,<8",
     "httpx>=0.28,<1",
-    "memray>=1.18,<2.0",
-    "pytest>=8.4,<9.0",
+    "memray>=1.18,<2",
+    "pytest>=8.4,<9",
 ]
 
 [project.urls]
