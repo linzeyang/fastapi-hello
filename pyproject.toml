@@ -6,8 +6,8 @@ authors = [
     { name = "Zeyang Lin", email = "4020306+linzeyang@users.noreply.github.com" },
 ]
 dependencies = [
-    "fastapi==0.118.2",
-    "pydantic[email]==2.12.0",
+    "fastapi==0.119.0",
+    "pydantic[email]==2.12.2",
     "python-multipart==0.0.20",
     "uvicorn[standard]==0.37.0",
 ]
@@ -40,9 +40,9 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-    "coverage>=7.10,<8",
+    "coverage>=7.11,<8",
     "httpx>=0.28,<1",
-    "memray>=1.18,<2",
+    "memray>=1.19,<2",
     "pytest>=8.4,<9",
 ]
 
