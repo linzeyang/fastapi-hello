@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.13.11-slim-trixie
+FROM python:3.14.2-slim-trixie
 
 EXPOSE 8000
 
