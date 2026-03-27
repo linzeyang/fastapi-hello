@@ -21,22 +21,22 @@ repos:
     hooks:
       - id: pyupgrade
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.15.8
     hooks:
       - id: ruff-check
         args: ["--fix", "--config=./pyproject.toml"]
       - id: ruff-format
         args: ["--config=./pyproject.toml"]
   - repo: https://github.com/psf/black
-    rev: 25.12.0
+    rev: 26.3.1
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/isort
-    rev: 7.0.0
+    rev: 8.0.1
     hooks:
       - id: isort
   - repo: https://github.com/pdm-project/pdm
-    rev: 2.26.3
+    rev: 2.26.7
     hooks:
       - id: pdm-lock-check
 exclude: ^.vscode/
