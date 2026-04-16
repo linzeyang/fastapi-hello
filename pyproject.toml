@@ -6,7 +6,7 @@ authors = [
     { name = "Zeyang Lin", email = "4020306+linzeyang@users.noreply.github.com" },
 ]
 dependencies = [
-    "fastapi==0.135.3",
+    "fastapi==0.136.0",
     "pydantic[email]==2.12.5",
     "python-multipart==0.0.24",
     "uvicorn[standard]==0.44.0",
