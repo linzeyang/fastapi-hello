@@ -1,4 +1,4 @@
-import httpx
+import httpx2
 import pytest
 
 
@@ -16,4 +16,4 @@ def disable_network_calls(monkeypatch):
     def stunted_get():
         raise RuntimeError("Network access not allowed during testing!")
 
-    monkeypatch.setattr(httpx, "get", lambda *args, **kwargs: stunted_get())
+    monkeypatch.setattr(httpx2, "get", lambda *args, **kwargs: stunted_get())
