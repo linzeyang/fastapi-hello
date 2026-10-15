@@ -4,7 +4,7 @@ from datetime import datetime, time, timedelta
 from decimal import Decimal
 from enum import Enum
 from http import HTTPStatus
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from fastapi import (
@@ -46,13 +46,13 @@ class Image(BaseModel):
 
 
 class Item(BaseModel):
-    id: Optional[int] = None
+    id: int | None = None
     name: str
-    description: Optional[str] = Field(None, max_length=100)
+    description: str | None = Field(None, max_length=100)
     price: Decimal = Field(..., ge=Decimal())
-    tax: Optional[Decimal] = None
+    tax: Decimal | None = None
     tags: list[str] = []
-    images: Optional[list[Image]] = None
+    images: list[Image] | None = None
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
@@ -69,13 +69,13 @@ class Item(BaseModel):
 
 class User(BaseModel):
     username: str = Field(..., examples=["joebloggs"])
-    full_name: Optional[str] = Field(None, examples=["Joe Bloggs"])
+    full_name: str | None = Field(None, examples=["Joe Bloggs"])
 
 
 class UserBase(BaseModel):
     username: str
     email: EmailStr
-    full_name: Optional[str] = None
+    full_name: str | None = None
 
 
 class UserIn(UserBase):
@@ -117,9 +117,7 @@ async def unicorn_exception_handler(request: Request, exc: UnicornException):
 
 @app.get("/")
 def home(
-    x_dummy_header: Optional[list[str]] = Header(
-        default=None, convert_underscores=True
-    ),
+    x_dummy_header: list[str] | None = Header(default=None, convert_underscores=True),
 ) -> dict:
     result: dict[str, Any] = {"message": "hello, world!"}
 
@@ -131,7 +129,7 @@ def home(
 
 @app.get("/items")
 def read_items(
-    q: Optional[str] = Query(
+    q: str | None = Query(
         None,
         min_length=3,
         max_length=50,
@@ -140,8 +138,8 @@ def read_items(
         description="Query string for the items to search",
     ),
     q2: list[str] = Query(["aa", "bb", "cc"], alias="q-2"),
-    q3: Optional[str] = Query(None, deprecated=True),
-    ads_id: Optional[str] = Cookie(None, max_length=128, examples=["70f59c6b"]),
+    q3: str | None = Query(None, deprecated=True),
+    ads_id: str | None = Cookie(None, max_length=128, examples=["70f59c6b"]),
 ) -> dict:
     results: dict[str, Any] = {
         "items": [
@@ -166,7 +164,7 @@ def read_items(
 def read_item(
     item_id: int = Path(..., ge=1, title="The ID of the item"),
     needy: str = Query(...),
-    q: Optional[str] = Query(None),
+    q: str | None = Query(None),
     short: bool = Query(False),
     x_token: str = Header(..., convert_underscores=True),
 ) -> dict:
@@ -259,9 +257,9 @@ def update_item(
             }
         ],
     ),
-    user: Optional[User] = None,
+    user: User | None = None,
     importance: int = Body(1, ge=0, le=9),
-    q: Optional[str] = None,
+    q: str | None = None,
 ) -> dict:
     item_dict = {"id": item_id, "importance": importance, "item": item.model_dump()}
 
@@ -304,10 +302,10 @@ def create_index_weights(weights: dict[int, Decimal]):
 )
 def create_event(
     event_id: UUID,
-    start_datetime: Optional[datetime] = Body(None),
-    end_datetime: Optional[datetime] = Body(None),
-    repeat_at: Optional[time] = Body(None),
-    process_after: Optional[timedelta] = Body(None),
+    start_datetime: datetime | None = Body(None),
+    end_datetime: datetime | None = Body(None),
+    repeat_at: time | None = Body(None),
+    process_after: timedelta | None = Body(None),
 ):
     start_process = start_datetime + process_after
     duration = end_datetime - start_process
@@ -349,9 +347,9 @@ def login(username: str = Form(), password: str = Form()):
 
 @app.post("/file/")
 async def create_file(
-    file: Optional[bytes] = File(default=None, description="A file read as bytes"),
-    fileb: Optional[UploadFile] = File(default=None),
-    token: Optional[str] = Form(default=None),
+    file: bytes | None = File(default=None, description="A file read as bytes"),
+    fileb: UploadFile | None = File(default=None),
+    token: str | None = Form(default=None),
 ):
     if not file:
         return {"message": "No file sent"}
@@ -372,7 +370,7 @@ async def create_files(
 
 @app.post("/uploadfile/")
 async def create_upload_file(
-    file: Optional[UploadFile] = File(
+    file: UploadFile | None = File(
         default=None, description="A file read as UploadFile"
     ),
 ):
